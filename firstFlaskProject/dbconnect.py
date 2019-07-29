@@ -23,8 +23,10 @@ mycursor = oneresumedatabase.cursor()
 
 
 mycursor.execute("select * from oneresumedatabase.accountinformation")
-
-for entry in mycursor: 
+result = mycursor.fetchall()
+print(result)
+items = [dict(zip([ key[0] for key in mycursor.description ], row)) for row in result]
+for entry in items: 
     print(entry)
 
 
