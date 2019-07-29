@@ -5,7 +5,7 @@ from flask import abort
 from flask import Flask, jsonify
 import mysql.connector
 import json
-from sqlConnection import sqlOneResumeDatabase
+from sqlConnectionFile import sqlOneResumeDatabase
 
 app = Flask(__name__)
 
