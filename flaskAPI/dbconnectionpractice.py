@@ -1,9 +1,14 @@
 import mysql.connector
-from sqlConnectionFile import sqlOneResumeDatabase
+from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 
 
-
-mycursor = sqlOneResumeDatabase()
+oneresumedatabase = mysql.connector.connect(
+    host=hostName(),
+    user=userDBName(),
+    passwd=dbPasswrd(),
+    database=databaseName()
+)
+mycursor = oneresumedatabase.cursor()
 
 
     # sqlFormula = "INSERT INTO accountinformation (FirstName, LastName, Email, Address1, Address2, City, State, Country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"

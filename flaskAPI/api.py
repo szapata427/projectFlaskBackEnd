@@ -5,11 +5,18 @@ from flask import abort
 from flask import Flask, jsonify
 import mysql.connector
 import json
-from sqlConnectionFile import sqlOneResumeDatabase
+from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 
 app = Flask(__name__)
 
-mycursor = sqlOneResumeDatabase()
+oneresumedatabase = mysql.connector.connect(
+    host=hostName(),
+    user=userDBName(),
+    passwd=dbPasswrd(),
+    database=databaseName()
+)
+mycursor = oneresumedatabase.cursor()
+
 
 @app.route('/todo/api/v1.0/users', methods=['GET'])
 def get_users():
