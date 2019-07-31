@@ -2,10 +2,11 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_restful import reqparse
 from flask import abort
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import mysql.connector
 import json
 from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
+import requests
 
 app = Flask(__name__)
 
@@ -17,8 +18,7 @@ oneresumedatabase = mysql.connector.connect(
 )
 mycursor = oneresumedatabase.cursor()
 
-
-@app.route('/todo/api/v1.0/users', methods=['GET'])
+@app.route('/oneresume/api/v1.0/users', methods=['GET'])
 def get_users():
     query = "select * from oneresumedatabase.accountinformation"
     mycursor.execute(query)
@@ -26,11 +26,16 @@ def get_users():
 
     return ({'tasks': items})
 
+@app.route('/oneresume/api/v1.0/user', methods=['POST'])
+def add_user():
+    email = request.args.get('Email', '')
+    password = request.args.get('Password', '')
+    firstName = request.args.get('FirstName', '')
+    print(email)
+    return firstName
+
 if __name__ == '__main__':
-    app.run(debug=False)
-
-
-
+    app.run(debug=True)
 
 # app = Flask(__name__)
 # api = Api(app)
