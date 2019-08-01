@@ -7,6 +7,7 @@ oneresumedatabase = mysql.connector.connect(
     user=userDBName(),
     passwd=dbPasswrd(),
     database=databaseName()
+    
 )
 mycursor = oneresumedatabase.cursor()
 

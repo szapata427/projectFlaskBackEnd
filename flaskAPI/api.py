@@ -8,6 +8,8 @@ import json
 from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 import requests
 
+
+
 app = Flask(__name__)
 
 oneresumedatabase = mysql.connector.connect(
@@ -28,11 +30,24 @@ def get_users():
 
 @app.route('/oneresume/api/v1.0/user', methods=['POST'])
 def add_user():
-    email = request.args.get('Email', '')
-    password = request.args.get('Password', '')
-    firstName = request.args.get('FirstName', '')
-    print(email)
-    return firstName
+    print(request.args)
+    data = request.get_json()
+
+    email = data["Email"]
+    lastname = data["LastName"]
+    firstName = data["FirstName"]
+    
+    sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"
+    values = (firstName, email, lastname)
+    mycursor.execute(sql, values)
+
+    print(mycursor.rowcount, "record inserted.")
+
+    oneresumedatabase.commit()
+
+    return jsonify(
+        {"result": "success"}
+    )
 
 if __name__ == '__main__':
     app.run(debug=True)
