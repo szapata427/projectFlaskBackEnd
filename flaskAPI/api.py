@@ -36,7 +36,7 @@ def add_user():
     email = data["Email"]
     lastname = data["LastName"]
     firstName = data["FirstName"]
-    
+
     sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"
     values = (firstName, email, lastname)
     mycursor.execute(sql, values)
@@ -46,7 +46,9 @@ def add_user():
     oneresumedatabase.commit()
 
     return jsonify(
-        {"result": "success"}
+        email=email,
+        lastname=lastname,
+        firstName=firstName
     )
 
 if __name__ == '__main__':
