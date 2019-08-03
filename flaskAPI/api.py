@@ -61,7 +61,8 @@ def add_user():
         email=email,
         lastname=lastname,
         firstName=firstName,
-        count=mycursor.rowcount
+        count=mycursor.rowcount,
+        id=mycursor.lastrowid
     )
 
 if __name__ == '__main__':
