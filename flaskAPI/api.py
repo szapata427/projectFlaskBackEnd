@@ -7,6 +7,8 @@ import mysql.connector
 import json
 from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 import requests
+from mysql.connector.errors import Error
+
 
 
 
@@ -22,10 +24,15 @@ mycursor = oneresumedatabase.cursor()
 
 @app.route('/oneresume/api/v1.0/users', methods=['GET'])
 def get_users():
-    query = "select * from oneresumedatabase.accountinformation"
-    mycursor.execute(query)
-    items = [dict(zip([ key[0] for key in mycursor.description ], row)) for row in mycursor]
-
+    try:
+        query = "select * from oneresumedatabase.Users"
+        mycursor.execute(query)
+        items = [dict(zip([ key[0] for key in mycursor.description ], row)) for row in mycursor]
+        
+    except mysql.connector.Error as error:
+        return jsonify(
+            error=error
+                        ) 
     return ({'tasks': items})
 
 @app.route('/oneresume/api/v1.0/user', methods=['POST'])
@@ -36,19 +43,24 @@ def add_user():
     email = data["Email"]
     lastname = data["LastName"]
     firstName = data["FirstName"]
+    try:
+        sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"
+        values = (firstName, email, lastname)
+        mycursor.execute(sql, values)
 
-    sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"
-    values = (firstName, email, lastname)
-    mycursor.execute(sql, values)
+        print(mycursor.rowcount, "record inserted.")
 
-    print(mycursor.rowcount, "record inserted.")
-
-    oneresumedatabase.commit()
+        oneresumedatabase.commit()
+    except mysql.connector.Error as error:            
+        return jsonify(
+            error=error
+        )
 
     return jsonify(
         email=email,
         lastname=lastname,
-        firstName=firstName
+        firstName=firstName,
+        count=mycursor.rowcount
     )
 
 if __name__ == '__main__':
