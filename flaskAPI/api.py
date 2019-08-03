@@ -28,7 +28,7 @@ def get_users():
         query = "select * from oneresumedatabase.Users"
         mycursor.execute(query)
         items = [dict(zip([ key[0] for key in mycursor.description ], row)) for row in mycursor]
-        
+
     except mysql.connector.Error as error:
         return jsonify(
             error=error
@@ -51,9 +51,10 @@ def add_user():
         print(mycursor.rowcount, "record inserted.")
 
         oneresumedatabase.commit()
-    except mysql.connector.Error as error:            
+    except mysql.connector.Error as error:
+        stringerror =  str(error)            
         return jsonify(
-            error=error
+            error=stringerror
         )
 
     return jsonify(
