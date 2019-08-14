@@ -22,7 +22,7 @@ oneresumedatabase = mysql.connector.connect(
 )
 mycursor = oneresumedatabase.cursor()
 
-@app.route('/oneresume/api/v1.0/users', methods=['GET'])
+@app.route('/saveyourfuture/api/v1.0/users', methods=['GET'])
 def get_users():
     try:
         query = "select * from oneresumedatabase.Users"
@@ -35,7 +35,7 @@ def get_users():
                         ) 
     return ({'tasks': items})
 
-@app.route('/oneresume/api/v1.0/user', methods=['POST'])
+@app.route('/saveyourfuture/api/v1.0/user', methods=['POST'])
 def add_user():
     print(request.args)
     data = request.get_json()
@@ -64,6 +64,12 @@ def add_user():
         count=mycursor.rowcount,
         id=mycursor.lastrowid
     )
+
+@app.route('/saveyourfuture/api/v1.0/searchUser')
+def search_user():
+    userEmail = request.args.get('email')
+    print(userEmail)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
