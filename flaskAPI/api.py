@@ -10,8 +10,6 @@ import requests
 from mysql.connector.errors import Error
 
 
-
-
 app = Flask(__name__)
 
 oneresumedatabase = mysql.connector.connect(
@@ -34,6 +32,23 @@ def get_users():
             error=error
                         ) 
     return ({'tasks': items})
+
+@app.route('/saveyourfuture/api/v1.0/SearchUserEmail')
+def search_user():
+    userEmail = request.args.get('email')
+    try:
+        sql = f"SELECT * FROM oneresumedatabase.Users where Email='{userEmail}'"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchone()
+    except mysql.connector.Error as error:
+        stringerror =  str(error)            
+        return jsonify(
+            error=stringerror
+        )
+
+    return jsonify(
+        result=myresult
+    )
 
 @app.route('/saveyourfuture/api/v1.0/user', methods=['POST'])
 def add_user():
@@ -65,10 +80,8 @@ def add_user():
         id=mycursor.lastrowid
     )
 
-@app.route('/saveyourfuture/api/v1.0/searchUser')
-def search_user():
-    userEmail = request.args.get('email')
-    print(userEmail)
+
+        
 
 
 if __name__ == '__main__':
