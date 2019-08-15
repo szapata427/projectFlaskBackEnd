@@ -8,9 +8,13 @@ import json
 from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 import requests
 from mysql.connector.errors import Error
+from flask_cors import CORS, cross_origin
+
 
 
 app = Flask(__name__)
+# CORS(app, support_credentials=True)
+
 
 oneresumedatabase = mysql.connector.connect(
     host=hostName(),
@@ -20,7 +24,12 @@ oneresumedatabase = mysql.connector.connect(
 )
 mycursor = oneresumedatabase.cursor()
 
+
+
+
+
 @app.route('/saveyourfuture/api/v1.0/users', methods=['GET'])
+@cross_origin()
 def get_users():
     try:
         query = "select * from oneresumedatabase.Users"
@@ -34,6 +43,7 @@ def get_users():
     return ({'tasks': items})
 
 @app.route('/saveyourfuture/api/v1.0/SearchUserEmail')
+@cross_origin()
 def search_user():
     userEmail = request.args.get('email')
     try:
@@ -50,8 +60,10 @@ def search_user():
         result=myresult
     )
 
-@app.route('/saveyourfuture/api/v1.0/user', methods=['POST'])
+@app.route('/saveyourfuture/api/v1.0/NewUser', methods=['POST'])
+@cross_origin()
 def add_user():
+    
     print(request.args)
     data = request.get_json()
 
@@ -67,7 +79,7 @@ def add_user():
 
         oneresumedatabase.commit()
     except mysql.connector.Error as error:
-        stringerror =  str(error)            
+        stringerror = str(error)            
         return jsonify(
             error=stringerror
         )
