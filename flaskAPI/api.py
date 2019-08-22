@@ -93,11 +93,11 @@ def add_user():
         )
 
     return jsonify(
-        email=email,
-        lastname=lastname,
-        firstName=firstName,
+        Email=email,
+        LastName=lastname,
+        FirstName=firstName,
         count=mycursor.rowcount,
-        id=mycursor.lastrowid
+        Id=mycursor.lastrowid
     )
 
 
