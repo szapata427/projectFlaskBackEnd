@@ -38,10 +38,12 @@ def get_users():
 
     except mysql.connector.Error as error:
         return jsonify(
-            error=error
+            result=error
                         ) 
     return ({'tasks': items})
 
+
+# search specific user by email
 @app.route('/saveyourfuture/api/v1.0/SearchUserEmail')
 @cross_origin()
 def search_user():
@@ -50,14 +52,20 @@ def search_user():
         sql = f"SELECT * FROM oneresumedatabase.Users where Email='{userEmail}'"
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
+
     except mysql.connector.Error as error:
         stringerror =  str(error)            
         return jsonify(
-            error=stringerror
+            result=stringerror
         )
-
+    dataToReturn = {
+        "Id": myresult[0],
+        "FirstName": myresult[1],
+        "LastName": myresult[2],
+        "Email": myresult[3]
+    }
     return jsonify(
-        result=myresult
+        result=dataToReturn
     )
 
 @app.route('/saveyourfuture/api/v1.0/NewUser', methods=['POST'])
@@ -71,7 +79,7 @@ def add_user():
     lastname = data["LastName"]
     firstName = data["FirstName"]
     try:
-        sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"
+        sql = "INSERT INTO oneresumedatabase.Users (FirstName, Email, LastName) VALUES (%s, %s, %s)"        
         values = (firstName, email, lastname)
         mycursor.execute(sql, values)
 
@@ -81,7 +89,7 @@ def add_user():
     except mysql.connector.Error as error:
         stringerror = str(error)            
         return jsonify(
-            error=stringerror
+            result=stringerror
         )
 
     return jsonify(
