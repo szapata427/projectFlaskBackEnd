@@ -57,12 +57,18 @@ def search_user():
         mycursor.execute(sql)
         myresult = mycursor.fetchone()
 
+        if myresult is None:
+            return jsonify(
+                result=None
+            )
     except mysql.connector.Error as error:
         stringerror =  str(error)            
         errormessage = {"Error": stringerror}            
         return jsonify(
             result=errormessage
         )
+
+    
     dataToReturn = {
         "Id": myresult[0],
         "FirstName": myresult[1],

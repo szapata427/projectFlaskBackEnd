@@ -41,5 +41,5 @@ def get_user_transactions():
                         
     return ({'result': items})
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# if __name__ == '__main__':
+#     transaction_api.run(debug=True)
