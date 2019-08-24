@@ -9,12 +9,13 @@ from sqlConnectionFile import hostName, userDBName, dbPasswrd, databaseName
 import requests
 from mysql.connector.errors import Error
 from flask_cors import CORS, cross_origin
+from transactionAPI import transaction_api
 
 
 
 app = Flask(__name__)
 # CORS(app, support_credentials=True)
-
+app.register_blueprint(transaction_api)
 
 oneresumedatabase = mysql.connector.connect(
     host=hostName(),
@@ -37,10 +38,13 @@ def get_users():
         items = [dict(zip([ key[0] for key in mycursor.description ], row)) for row in mycursor]
 
     except mysql.connector.Error as error:
+        stringerror = str(error)
+        errormessage = {"Error": stringerror}            
         return jsonify(
-            result=error
-                        ) 
-    return ({'tasks': items})
+            result=errormessage
+        )
+                        
+    return ({'result': items})
 
 
 # search specific user by email
@@ -55,8 +59,9 @@ def search_user():
 
     except mysql.connector.Error as error:
         stringerror =  str(error)            
+        errormessage = {"Error": stringerror}            
         return jsonify(
-            result=stringerror
+            result=errormessage
         )
     dataToReturn = {
         "Id": myresult[0],
@@ -87,9 +92,10 @@ def add_user():
 
         oneresumedatabase.commit()
     except mysql.connector.Error as error:
-        stringerror = str(error)            
+        stringerror = str(error)
+        errormessage = {"Error": stringerror}            
         return jsonify(
-            result=stringerror
+            result=errormessage
         )
 
     return jsonify(

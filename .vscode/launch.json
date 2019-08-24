@@ -5,12 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
+            "name": "Python: Flask api",
             "type": "python",
             "request": "launch",
             "module": "flask",
             "env": {
                 "FLASK_APP": "flaskAPI/api.py",
+                "FLASK_ENV": "development",
+                "FLASK_DEBUG": "0"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true
+        }
+        {
+            "name": "Python: Flask transaction api",
+            "type": "python",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "flaskAPI/transactionAPI.py",
                 "FLASK_ENV": "development",
                 "FLASK_DEBUG": "0"
             },
