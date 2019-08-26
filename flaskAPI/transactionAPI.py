@@ -58,6 +58,7 @@ def add_transaction_for_user():
         values = (userDBId, amount, transactionType, notes)
         mycursor.execute(sql, values)
 
+        print(mycursor)
         print(mycursor.rowcount, "record inserted.")
 
         oneresumedatabase.commit()
@@ -69,11 +70,12 @@ def add_transaction_for_user():
         )
 
     dataReturned = {
-    "Email":userDBId,
-    "LastName":amount,
-    "FirstName":transactionType,
+    "Success": "true",
+    "UserId":userDBId,
+    "Amount":amount,
+    "TransactionType":transactionType,
     "Notes": notes,
-    "count":mycursor.rowcount,
+    "RowsAdded":mycursor.rowcount,
     "Id":mycursor.lastrowid
     }
 
