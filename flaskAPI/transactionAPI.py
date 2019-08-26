@@ -41,5 +41,47 @@ def get_user_transactions():
                         
     return ({'result': items})
 
+@transaction_api.route('/saveyourfuture/api/v1.0/AddTransaction', methods=['POST'])
+@cross_origin()
+
+def add_transaction_for_user():
+    
+    try:
+        print(request.args)
+        data = request.get_json()
+
+        userDBId = data["UserId"]
+        amount = data["Amount"]
+        transactionType = data["Type"]
+        notes = data["Notes"]
+        sql = "INSERT INTO oneresumedatabase.UserTransactions (UserId, Amount, Type, Notes) VALUES (%s, %s, %s, %s)"        
+        values = (userDBId, amount, transactionType, notes)
+        mycursor.execute(sql, values)
+
+        print(mycursor.rowcount, "record inserted.")
+
+        oneresumedatabase.commit()
+    except mysql.connector.Error as error:
+        stringerror = str(error)
+        errormessage = {"Error": stringerror}            
+        return jsonify(
+            result=errormessage
+        )
+
+    dataReturned = {
+    "Email":userDBId,
+    "LastName":amount,
+    "FirstName":transactionType,
+    "Notes": notes,
+    "count":mycursor.rowcount,
+    "Id":mycursor.lastrowid
+    }
+
+    return jsonify(
+        result=dataReturned
+    )
+
+
+
 # if __name__ == '__main__':
 #     transaction_api.run(debug=True)
