@@ -79,6 +79,7 @@ def search_user():
         result=dataToReturn
     )
 
+
 @app.route('/saveyourfuture/api/v1.0/NewUser', methods=['POST'])
 @cross_origin()
 def add_user():

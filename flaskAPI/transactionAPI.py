@@ -47,6 +47,7 @@ def get_user_transactions():
 def add_transaction_for_user():
     
     try:
+
         print(request.args)
         data = request.get_json()
 
@@ -62,7 +63,8 @@ def add_transaction_for_user():
         print(mycursor.rowcount, "record inserted.")
 
         oneresumedatabase.commit()
-    except mysql.connector.Error as error:
+
+    except Exception as error:
         stringerror = str(error)
         errormessage = {"Error": stringerror}            
         return jsonify(
@@ -82,6 +84,45 @@ def add_transaction_for_user():
     return jsonify(
         result=dataReturned
     )
+
+
+@transaction_api.route('/saveyourfuture/api/v1.0/UsersTransactions')
+@cross_origin()
+def users_transacttions():
+    userId = request.args.get('UserId')
+    try:
+        sql = f"SELECT * FROM oneresumedatabase.UserTransactions where UserId='{userId}'"
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+
+        if myresult is None:
+            return jsonify(
+                result=None
+            )
+    except mysql.connector.Error as error:
+        stringerror =  str(error)            
+        errormessage = {"Error": stringerror}            
+        return jsonify(
+            result=errormessage
+        )
+
+    all_entriies = []
+    for entry in myresult:
+        print(entry)
+        record = {
+            "Id": entry[0],
+            "UserId": entry[1],
+            "Amount": entry[2],
+            "Type": entry[3],
+            "CreatedOn": entry[4],
+            "Notes": entry[5],
+            }
+        all_entriies.append(record)
+
+    return jsonify(
+        result=all_entriies
+    )
+
 
 
 
