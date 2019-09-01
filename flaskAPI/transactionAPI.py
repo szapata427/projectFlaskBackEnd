@@ -96,7 +96,7 @@ def add_transaction_for_user():
 def users_transacttions():
     userId = request.args.get('UserId')
     try:
-        sql = f"SELECT * FROM oneresumedatabase.UserTransactions where UserId='{userId}'"
+        sql = f"SELECT * FROM oneresumedatabase.UserTransactions WHERE UserId={userId} ORDER BY CreatedOn DESC"
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
 
@@ -111,7 +111,7 @@ def users_transacttions():
             result=errormessage
         )
 
-    all_entriies = []
+    all_entries = []
     for entry in myresult:
         print(entry)
         record = {
@@ -122,10 +122,11 @@ def users_transacttions():
             "CreatedOn": entry[4],
             "Notes": entry[5],
             }
-        all_entriies.append(record)
+        all_entries.append(record)
 
+    print(all_entries)
     return jsonify(
-        result=all_entriies
+        result=all_entries
     )
 
 
