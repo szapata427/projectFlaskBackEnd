@@ -10,6 +10,8 @@ import requests
 from mysql.connector.errors import Error
 from flask_cors import CORS, cross_origin
 from flask import Blueprint
+import datetime
+
 
 
 
@@ -45,6 +47,7 @@ def get_user_transactions():
 @cross_origin()
 
 def add_transaction_for_user():
+
     
     try:
 
@@ -58,11 +61,12 @@ def add_transaction_for_user():
         sql = "INSERT INTO oneresumedatabase.UserTransactions (UserId, Amount, Type, Notes) VALUES (%s, %s, %s, %s)"        
         values = (userDBId, amount, transactionType, notes)
         mycursor.execute(sql, values)
+        oneresumedatabase.commit()
+        datetimeCreated = datetime.datetime.now()
 
         print(mycursor)
         print(mycursor.rowcount, "record inserted.")
 
-        oneresumedatabase.commit()
 
     except Exception as error:
         stringerror = str(error)
@@ -72,13 +76,14 @@ def add_transaction_for_user():
         )
 
     dataReturned = {
-    "Success": "true",
+    "Success": True,
     "UserId":userDBId,
     "Amount":amount,
     "TransactionType":transactionType,
     "Notes": notes,
     "RowsAdded":mycursor.rowcount,
-    "Id":mycursor.lastrowid
+    "Id":mycursor.lastrowid,
+    "CreatedOn": datetimeCreated
     }
 
     return jsonify(
