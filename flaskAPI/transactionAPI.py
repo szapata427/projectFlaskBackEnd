@@ -15,6 +15,8 @@ import datetime
 
 
 
+
+
 transaction_api = Blueprint('transaction_api', __name__)
 
 
@@ -95,8 +97,16 @@ def add_transaction_for_user():
 @cross_origin()
 def users_transacttions():
     userId = request.args.get('UserId')
+    lastDays = request.args.get('LastDays')
+
     try:
         sql = f"SELECT * FROM oneresumedatabase.UserTransactions WHERE UserId={userId} ORDER BY CreatedOn DESC"
+
+        if lastDays:
+            daysToDisplay = datetime.datetime.now() - datetime.timedelta(days=int(lastDays))
+            dateForSql = daysToDisplay.date().isoformat()
+            sql = f"SELECT * FROM oneresumedatabase.UserTransactions WHERE UserId={userId} and CreatedOn >= '{dateForSql}' ORDER BY CreatedOn DESC"
+
         mycursor.execute(sql)
         myresult = mycursor.fetchall()
 
@@ -113,7 +123,6 @@ def users_transacttions():
 
     all_entries = []
     for entry in myresult:
-        print(entry)
         record = {
             "Id": entry[0],
             "UserId": entry[1],
@@ -124,7 +133,6 @@ def users_transacttions():
             }
         all_entries.append(record)
 
-    print(all_entries)
     return jsonify(
         result=all_entries
     )
