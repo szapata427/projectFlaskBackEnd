@@ -61,7 +61,7 @@ def add_goal_for_user():
         notes = data["Notes"]
 
 
-        sql = "INSERT INTO oneresumedatabase.Goals (UserId, Amount, Type, Notes) VALUES (%s, %s, %s, %s, %s)"        
+        sql = "INSERT INTO oneresumedatabase.Goals (UserId, Amount, Name, Notes, EndDate) VALUES (%s, %s, %s, %s, %s)"        
         values = (userDBId, amount, goalName, notes, endDate)
         mycursor.execute(sql, values)
         oneresumedatabase.commit()
