@@ -10,12 +10,14 @@ import requests
 from mysql.connector.errors import Error
 from flask_cors import CORS, cross_origin
 from transactionAPI import transaction_api
+from goalsAPI import goals_api
 
 
 
 app = Flask(__name__)
 # CORS(app, support_credentials=True)
 app.register_blueprint(transaction_api)
+app.register_blueprint(goals_api)
 
 oneresumedatabase = mysql.connector.connect(
     host=hostName(),
