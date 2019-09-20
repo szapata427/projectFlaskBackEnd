@@ -46,7 +46,9 @@ def get_user_goals():
     return ({'result': items})
 
 
+
 @goals_api.route('/saveyourfuture/api/v1.0/AddGoal', methods=['POST'])
+@cross_origin()
 def add_goal_for_user():
 
     try:
@@ -62,7 +64,7 @@ def add_goal_for_user():
 
 
         sql = "INSERT INTO oneresumedatabase.Goals (UserId, Amount, Name, Notes, EndDate) VALUES (%s, %s, %s, %s, %s)"        
-        values = (userDBId, amount, goalName, notes, endDate)
+        values = (userDBId, amount, goalName, notes, endDate )
         mycursor.execute(sql, values)
         oneresumedatabase.commit()
         datetimeCreated = datetime.datetime.now()
@@ -93,3 +95,53 @@ def add_goal_for_user():
     return jsonify(
         result=dataReturned
     )
+
+
+
+@goals_api.route('/saveyourfuture/api/v1.0/UsersGoals')
+@cross_origin()
+def search_goals_for_user():
+    userId = request.args.get('UserId')
+
+    try:
+        sql = f"SELECT * FROM oneresumedatabase.Goals WHERE UserId={userId} ORDER BY DateCreated DESC"
+
+        mycursor.execute(sql)
+        myresult = mycursor.fetchall()
+
+        if myresult is None:
+            return jsonify(
+                result=None
+            )
+
+
+    except Exception as error:
+        stringerror = str(error)
+        errormessage = {"Error": stringerror}            
+        return jsonify(
+            result=errormessage
+        )
+
+
+    all_entries = []
+    print(myresult)
+    for entry in myresult:
+        record = {
+        "Id":entry[0],
+        "Name":entry[1],
+        "Notes":entry[2],
+        "Amount": str(entry[3]),
+        "EndDate": entry[4],
+        "CreatedOn": entry[5],
+        "UsedId": entry[6]
+        }
+        all_entries.append(record)
+
+
+    return jsonify(
+        result=all_entries
+    )
+
+
+
+    
