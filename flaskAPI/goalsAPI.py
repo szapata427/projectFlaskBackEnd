@@ -101,9 +101,9 @@ def add_goal_for_user():
 @goals_api.route('/saveyourfuture/api/v1.0/UsersGoals')
 @cross_origin()
 def search_goals_for_user():
-    userId = request.args.get('UserId')
 
     try:
+        userId = request.args.get('UserId')
         sql = f"SELECT * FROM oneresumedatabase.Goals WHERE UserId={userId} ORDER BY DateCreated DESC"
 
         mycursor.execute(sql)
@@ -133,7 +133,7 @@ def search_goals_for_user():
         "Amount": str(entry[3]),
         "EndDate": entry[4],
         "CreatedOn": entry[5],
-        "UsedId": entry[6]
+        "UserId": entry[6]
         }
         all_entries.append(record)
 

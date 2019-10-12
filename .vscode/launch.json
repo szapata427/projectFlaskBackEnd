@@ -20,7 +20,7 @@
                 "--no-reload"
             ],
             "jinja": true
-        }
+        },
         {
             "name": "Python: Flask transaction api",
             "type": "python",

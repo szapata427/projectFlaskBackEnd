@@ -60,8 +60,9 @@ def add_transaction_for_user():
         amount = data["Amount"]
         transactionType = data["Type"]
         notes = data["Notes"]
-        sql = "INSERT INTO oneresumedatabase.UserTransactions (UserId, Amount, Type, Notes) VALUES (%s, %s, %s, %s)"        
-        values = (userDBId, amount, transactionType, notes)
+        goalId = data["GoalId"]
+        sql = "INSERT INTO oneresumedatabase.UserTransactions (UserId, Amount, Type, Notes, GoalId) VALUES (%s, %s, %s, %s, %s)"        
+        values = (userDBId, amount, transactionType, notes, goalId)
         mycursor.execute(sql, values)
         oneresumedatabase.commit()
         datetimeCreated = datetime.datetime.now()
@@ -85,7 +86,8 @@ def add_transaction_for_user():
     "Notes": notes,
     "RowsAdded":mycursor.rowcount,
     "Id":mycursor.lastrowid,
-    "CreatedOn": datetimeCreated
+    "CreatedOn": datetimeCreated,
+    "GoalId": goalId
     }
 
     return jsonify(
