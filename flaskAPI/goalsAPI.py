@@ -143,5 +143,51 @@ def search_goals_for_user():
     )
 
 
+@goals_api.route('/saveyourfuture/api/v1.0/EditGoal', methods=['PATCH'])
+@cross_origin()
+def editGoal():
 
-    
+    try:
+        print(request.args)
+        data = request.get_json()
+
+        goalId = data["Id"]
+        endDate = data["EndDate"]
+        name = data["Name"]
+        notes = data["Notes"]
+
+        amount = data["Amount"]
+
+
+        # sql = f"SELECT FROM oneresumedatabase.usertransactions where Id={goalId} UPDATE (UserId, Amount, Name, Notes, EndDate) VALUES (%s, %s, %s, %s, %s)"        
+        sql = f"UPDATE oneresumedatabase.usertransactions SET  Name='{name}', EndDate={endDate}, Notes='{notes}', Amount={amount} WHERE Id={goalId}"        
+        # values = (userDBId, amount, goalName, notes, endDate )
+        mycursor.execute(sql)
+        oneresumedatabase.commit()
+        datetimeCreated = datetime.datetime.now()
+
+        print(mycursor)
+        print(mycursor.rowcount, "record inserted.")
+
+
+    except Exception as error:
+        stringerror = str(error)
+        errormessage = {"Error": stringerror}            
+        return jsonify(
+            result=errormessage
+        )
+
+    dataReturned = {
+    "Success": True,
+    "Amount":amount,
+    "Name": name,
+    "Notes": notes,
+    "EndDate": endDate,
+    "RowsAdded":mycursor.rowcount,
+    "Id":mycursor.lastrowid,
+    "CreatedOn": datetimeCreated
+    }
+
+    return jsonify(
+        result=dataReturned
+    )
